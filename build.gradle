@@ -26,6 +26,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.jsoup:jsoup:1.15.1'
+    implementation 'com.google.guava:guava:31.1-jre'
 }
 
 tasks.named('test') {
