@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CodeDecriptor {
+public class CodeDecryptor {
     CountryCodesRepository repository;
     PhoneNumberValidator validator;
 
@@ -30,15 +30,8 @@ public class CodeDecriptor {
             phoneNumber.setErrors(response);
             return phoneNumber;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        String result = null;
-        stringBuilder.append("+");
-        for (Character ch : phoneNumber.getNumber().substring(1, phoneNumber.getNumber().length()-1).toCharArray()){
-            stringBuilder.append(ch);
-            if (repository.getCodes().containsKey(stringBuilder.toString())){
-                result  = repository.getCodes().get(stringBuilder.toString());
-            }
-        }
+
+        String result = findOccurrence(phoneNumber);
         if (result == null){
             System.out.println("This number does not exist");
         }
@@ -50,4 +43,18 @@ public class CodeDecriptor {
     private PhoneNumber removeUnnecessaryTokens(String number){
         return new PhoneNumber(number.replaceAll("[ \\-()]", ""));
     }
+
+    public String findOccurrence(PhoneNumber phoneNumber) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String result = null;
+        stringBuilder.append("+");
+        for (Character ch : phoneNumber.getNumber().substring(1, phoneNumber.getNumber().length()-1).toCharArray()){
+            stringBuilder.append(ch);
+            if (repository.getCodes().containsKey(stringBuilder.toString())){
+                result  = repository.getCodes().get(stringBuilder.toString());
+            }
+        }
+        return result;
+    }
+
 }

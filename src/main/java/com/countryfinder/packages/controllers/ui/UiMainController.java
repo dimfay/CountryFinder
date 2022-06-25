@@ -1,7 +1,7 @@
 package com.countryfinder.packages.controllers.ui;
 
 import com.countryfinder.packages.domain.PhoneNumber;
-import com.countryfinder.packages.services.CodeDecriptor;
+import com.countryfinder.packages.services.CodeDecryptor;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/ui")
 @AllArgsConstructor
 public class UiMainController {
-    private CodeDecriptor codeDecriptor;
+    private CodeDecryptor codeDecryptor;
 
     @GetMapping("/find-country")
     public String formPage(Model model){
@@ -22,7 +22,7 @@ public class UiMainController {
 
     @PostMapping("/found-country")
     public String resultPage(@ModelAttribute PhoneNumber phoneNumber, Model model){
-        var obj = codeDecriptor.decrypt(phoneNumber);
+        var obj = codeDecryptor.decrypt(phoneNumber);
         model.addAttribute("phoneNumber", obj);
         return "result";
     }
