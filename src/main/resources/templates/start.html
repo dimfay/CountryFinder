@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="#" th:action="@{/ui//found-country}" method="post" th:object="${phoneNumber}">
+    <p>Number: <input type="text" th:field="*{number}"/></p>
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

@@ -29,6 +29,8 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.jsoup:jsoup:1.15.1'
     implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-devtools:2.7.0'
 }
 
 tasks.named('test') {

@@ -1,14 +1,13 @@
 package com.countryfinder.packages.services;
 
+import com.countryfinder.packages.domain.PhoneNumber;
 import com.countryfinder.packages.repository.CountryCodesRepository;
 import com.countryfinder.packages.validation.CoreError;
 import com.countryfinder.packages.validation.PhoneNumberValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -17,37 +16,38 @@ public class CodeDecriptor {
     CountryCodesRepository repository;
     PhoneNumberValidator validator;
 
-    public Collection<String> decript(String phoneNumber){
-        if (phoneNumber != null){
-            phoneNumber = removeUnnecessaryTokens(phoneNumber);
-        }
-        List<CoreError> errors = validator.validate(phoneNumber);
+    public PhoneNumber decrypt(PhoneNumber phoneNumber){
+        if (phoneNumber.getNumber() != null)
+            phoneNumber = removeUnnecessaryTokens(phoneNumber.getNumber());
+
+        List<CoreError> errors = validator.validate(phoneNumber.getNumber());
         if (!errors.isEmpty()){
-            var response = new ArrayList<String>();
+            var response = new ArrayList<CoreError>();
             for (CoreError error : errors){
-                response.add(error.getMessage());
+                response.add(error);
                 System.err.println(error.getMessage());
             }
-            return response;
+            phoneNumber.setErrors(response);
+            return phoneNumber;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        //Collection<String> result = new ArrayList<>();
         String result = null;
         stringBuilder.append("+");
-        for (Character ch : phoneNumber.substring(1, phoneNumber.length()-1).toCharArray()){
+        for (Character ch : phoneNumber.getNumber().substring(1, phoneNumber.getNumber().length()-1).toCharArray()){
             stringBuilder.append(ch);
             if (repository.getCodes().containsKey(stringBuilder.toString())){
                 result  = repository.getCodes().get(stringBuilder.toString());
             }
         }
-        if (result.isEmpty()){
+        if (result == null){
             System.out.println("This number does not exist");
         }
-        System.out.println("Possible countries: " + result);
-        return List.of(result);
+        System.out.println("Possible country: " + result);
+        phoneNumber.setCountry(result);
+        return phoneNumber;
     }
 
-    private String removeUnnecessaryTokens(String number){
-        return number.replaceAll("[ \\-()]", "");
+    private PhoneNumber removeUnnecessaryTokens(String number){
+        return new PhoneNumber(number.replaceAll("[ \\-()]", ""));
     }
 }
