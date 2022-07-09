@@ -1,18 +1,22 @@
 package com.countryfinder.packages.controllers.rest;
 
-import com.countryfinder.packages.domain.PhoneNumber;
-import com.countryfinder.packages.services.CodeDecryptor;
+import com.countryfinder.packages.dto.FindCountryRequest;
+import com.countryfinder.packages.dto.FindCountryResponse;
+import com.countryfinder.packages.services.CountryCodeDecryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
-@RequestMapping(path = "/find-country")
+@RequestMapping(path = "/api/find-country")
 public class MainController {
     @Autowired
-    CodeDecryptor codeDecryptor;
+    CountryCodeDecryptor countryCodeDecryptor;
 
     @PostMapping
-    public PhoneNumber findCountry(@RequestBody PhoneNumber phoneNumber){
-        return codeDecryptor.decrypt(phoneNumber);
+    public FindCountryResponse findCountry(@Valid @RequestBody FindCountryRequest request){
+        return countryCodeDecryptor.decrypt(request);
     }
+
 }
